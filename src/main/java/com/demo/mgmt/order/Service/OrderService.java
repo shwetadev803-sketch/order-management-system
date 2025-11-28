@@ -2,6 +2,7 @@ package com.demo.mgmt.order.Service;
 
 
 import com.demo.mgmt.order.Entity.Order;
+import com.demo.mgmt.order.Entity.OrderStatus;
 import com.demo.mgmt.order.Model.OrderDto;
 import com.demo.mgmt.order.Model.OrderResponse;
 import org.jspecify.annotations.Nullable;
@@ -15,7 +16,7 @@ public interface OrderService {
 
      Order orderById(long id);
 
-    @Nullable Page<OrderResponse> allOrders(Pageable pageable);
+    @Nullable Page<OrderResponse> allOrders(Pageable pageable, OrderStatus response);
 
     @Nullable Order updateOrder(OrderDto orderDto,long id);
 

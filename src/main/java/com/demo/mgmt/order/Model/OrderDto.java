@@ -26,6 +26,6 @@ public class OrderDto {
     @Positive(message = "Price must be greater than 0")
     private Double price;
 
-    @NotNull(message = "Order status is required")
+//    @NotNull(message = "Order status is required")
     private OrderStatus orderStatus;
 }

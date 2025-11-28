@@ -1,6 +1,7 @@
 package com.demo.mgmt.order.Controller;
 
 import com.demo.mgmt.order.Entity.Order;
+import com.demo.mgmt.order.Entity.OrderStatus;
 import com.demo.mgmt.order.Model.OrderDto;
 import com.demo.mgmt.order.Model.OrderResponse;
 import com.demo.mgmt.order.Service.OrderService;
@@ -38,11 +39,12 @@ public class OrderController {
     public ResponseEntity<Page<OrderResponse>> orders(
             @RequestParam(defaultValue = "0")int page,
             @RequestParam(defaultValue = "10")int size,
+            @RequestParam(required = false)OrderStatus status,
             @RequestParam(defaultValue = "createdAt,desc")
             String[] sort
     ){
         Pageable pageable = PageRequest.of(page, size, Sort.Direction.fromString(sort[1]),sort[0]);
-         Page<OrderResponse> orders = orderService.allOrders(pageable);
+         Page<OrderResponse> orders = orderService.allOrders(pageable,status);
         return ResponseEntity.ok(orders);
     }
 

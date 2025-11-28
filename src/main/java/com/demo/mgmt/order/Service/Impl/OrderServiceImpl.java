@@ -53,12 +53,15 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Page<OrderResponse> allOrders(Pageable pageable) {
-
-        Page<Order> orderPage = orderRepository.findAll(pageable);//fetch orders
+    public Page<OrderResponse> allOrders(Pageable pageable,OrderStatus orderStatus) {
+        Page<Order> orderPage;
+        if (orderStatus != null) {
+            orderPage = orderRepository.findByStatus(orderStatus,pageable);
+        } else {
+            orderPage = orderRepository.findAll(pageable);
+        }
         Page<OrderResponse> dtoPage = orderPage.map(order -> modelMapper.map(order, OrderResponse.class));//map entity to dto
         return dtoPage;
-//                .map(order -> modelMapper.map(order,OrderResponse.class));
     }
 
     @Override
