@@ -5,7 +5,12 @@ import com.demo.mgmt.order.Model.OrderDto;
 import com.demo.mgmt.order.Model.OrderResponse;
 import com.demo.mgmt.order.Service.OrderService;
 import jakarta.validation.Valid;
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,8 +35,15 @@ public class OrderController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Order>> orders(){
-        return ResponseEntity.ok(orderService.allOrders());
+    public ResponseEntity<Page<OrderResponse>> orders(
+            @RequestParam(defaultValue = "0")int page,
+            @RequestParam(defaultValue = "10")int size,
+            @RequestParam(defaultValue = "createdAt,desc")
+            String[] sort
+    ){
+        Pageable pageable = PageRequest.of(page, size, Sort.Direction.fromString(sort[1]),sort[0]);
+         Page<OrderResponse> orders = orderService.allOrders(pageable);
+        return ResponseEntity.ok(orders);
     }
 
     @PutMapping("modify/{id}")

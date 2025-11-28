@@ -8,7 +8,10 @@ import com.demo.mgmt.order.Model.OrderResponse;
 import com.demo.mgmt.order.Repository.OrderRepository;
 import com.demo.mgmt.order.Service.OrderService;
 import org.jspecify.annotations.Nullable;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,6 +22,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private OrderRepository orderRepository;
+    @Autowired
+    private ModelMapper modelMapper;
 
     @Override
     public OrderResponse createOrder(OrderDto orderDto) {
@@ -48,8 +53,12 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public @Nullable List<Order> allOrders() {
-        return orderRepository.findAll();
+    public Page<OrderResponse> allOrders(Pageable pageable) {
+
+        Page<Order> orderPage = orderRepository.findAll(pageable);//fetch orders
+        Page<OrderResponse> dtoPage = orderPage.map(order -> modelMapper.map(order, OrderResponse.class));//map entity to dto
+        return dtoPage;
+//                .map(order -> modelMapper.map(order,OrderResponse.class));
     }
 
     @Override
